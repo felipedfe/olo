@@ -1,0 +1,47 @@
+{
+    "version": 1,
+    "name": "BallController",
+    "maps": [
+        {
+            "name": "Ball",
+            "id": "6af50981-79ce-4d5f-bf6c-d13358b6bd78",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "0124c990-5724-4551-a790-8c14d7e12d1d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "cf8a28e6-327c-487f-b47e-d935c9590734",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5b3e2f6a-8c41-4d7e-9a2b-1f6c0d8e4a73",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
