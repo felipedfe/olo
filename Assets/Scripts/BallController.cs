@@ -55,13 +55,30 @@ public class BallController : MonoBehaviour
     {
         if (currentState != BallState.Moving) return;
 
+        // Esse método faz com q a bola sempre rebate num angulo de 45
+        Vector2 axisNormal = SnapToAxis(normal);
+
         // só reflete se a bola estiver indo contra a superfície
-        if (Vector2.Dot(direction, normal) < 0)
+        if (Vector2.Dot(direction, axisNormal) < 0)
         {
-            direction = Vector2.Reflect(direction, normal).normalized;
-            rig.linearVelocity = direction * speed;
+            direction = Vector2.Reflect(direction, axisNormal);
         }
 
+        rig.linearVelocity = direction * speed;
+    }
+
+    // Transforma qualquer normal em (±1, 0) ou (0, ±1)
+    // Esse método faz com q a bola sempre rebate num angulo de 45
+    private Vector2 SnapToAxis(Vector2 normal)
+    {
+        if (Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+        {
+            return new Vector2(Mathf.Sign(normal.x), 0); // bateu na lateral
+        }
+        else
+        {
+            return new Vector2(0, Mathf.Sign(normal.y)); // bateu na ponta
+        }
     }
 
 }

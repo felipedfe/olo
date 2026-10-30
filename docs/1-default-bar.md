@@ -104,13 +104,30 @@ public void Reflect(Vector2 normal)
 {
     if (currentState != BallState.Moving) return;
 
+    // arredonda a normal para uma das 4 direções retas (evita ângulo torto ao bater na quina)
+    Vector2 axisNormal = SnapToAxis(normal);
+
     // só reflete se a bola estiver indo contra a superfície
-    if (Vector2.Dot(direction, normal) < 0)
+    if (Vector2.Dot(direction, axisNormal) < 0)
     {
-        direction = Vector2.Reflect(direction, normal).normalized;
+        direction = Vector2.Reflect(direction, axisNormal);
     }
 
+    // reaplica sempre, para a física não deixar a bola mais lenta ou escorregando
     rig.linearVelocity = direction * speed;
+}
+
+// Transforma qualquer normal em (±1, 0) ou (0, ±1)
+private Vector2 SnapToAxis(Vector2 normal)
+{
+    if (Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+    {
+        return new Vector2(Mathf.Sign(normal.x), 0); // bateu na lateral
+    }
+    else
+    {
+        return new Vector2(0, Mathf.Sign(normal.y)); // bateu na ponta
+    }
 }
 ```
 
@@ -118,9 +135,10 @@ public void Reflect(Vector2 normal)
 > - **`public`**: outros scripts (a barra) podem chamar esse método. É o mesmo que o `ResetBall()` do Pong, que o `Score` chamava.
 > - **Normal**: uma seta perpendicular à superfície atingida, apontando "pra fora" da barra, em direção à bola. Se a bola bate na lateral direita da barra, a normal é `(1, 0)`. Se bate na ponta de cima, é `(0, 1)`.
 > - **`Vector2.Reflect`**: espelha a direção em relação a essa normal, como luz num espelho. Batendo na lateral, inverte o X. Batendo na ponta, inverte o Y. É o que o `changeDirection` do Phaser fazia, mas sem comparar posições nem usar números mágicos.
+> - **`SnapToAxis` (ângulo sempre 45°)**: quando a bola bate na **quina** da barra, a física devolve uma normal diagonal (da quina até o centro da bola), com um ângulo qualquer. Refletir nela deixa a saída torta. Como as barras só ficam em pé ou deitadas, a normal é arredondada para o eixo mais próximo: `(±1, 0)` (lateral) ou `(0, ±1)` (ponta). Refletir uma diagonal num eixo reto só inverte o X **ou** o Y, então a bola sempre sai a 45°. Isso só vale enquanto as barras estiverem a 0° ou 90°; barras inclinadas precisariam de outra regra.
 > - **`Vector2.Dot < 0`**: o produto escalar é negativo quando a bola está indo **contra** a normal, ou seja, entrando na barra. Isso evita refletir duas vezes seguidas (o papel do `setTimeout` no Phaser).
 > - **Por que refletir `direction` e não `rig.linearVelocity`?** Quando a colisão é avisada, a física já alterou a velocidade da bola. A `direction` guardada é a direção "limpa", de antes do impacto.
-> - **`rig.linearVelocity = direction * speed`**: mantém a velocidade sempre constante, como o `moveBall()`.
+> - **`rig.linearVelocity = direction * speed`** (fora do `if`): mantém a velocidade sempre constante, como o `moveBall()`. Se ficasse dentro do `if`, quando ele não entrasse a bola ficaria com a velocidade que a física deixou depois do impacto (mais lenta ou escorregando pela barra).
 
 ### 3b. Criar `Assets/Scripts/DefaultBar.cs`
 
