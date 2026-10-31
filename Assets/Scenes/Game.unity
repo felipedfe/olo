@@ -436,8 +436,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d14728c8fdfe044f4886df7105b2fab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultBar
-  moveOffset: {x: 0, y: 0}
-  duration: 2
 --- !u!50 &913464395
 Rigidbody2D:
   serializedVersion: 5
@@ -999,6 +997,7 @@ GameObject:
   - component: {fileID: 1897112958}
   - component: {fileID: 1897112957}
   - component: {fileID: 1897112961}
+  - component: {fileID: 1897112962}
   m_Layer: 0
   m_Name: GrabBar
   m_TagString: Untagged
@@ -1166,6 +1165,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0763fb8ea2121471f9108e176ef2f25d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GrabBar
+--- !u!114 &1897112962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897112955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f439a83e57fa4e59a8c470afb97d6bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BarMover
+  moveOffset: {x: 0, y: 2}
+  duration: 2
 --- !u!4 &1925531749 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6081994343683129755, guid: 0721f2def76de4c2baa6072bdda5148e, type: 3}
@@ -1184,6 +1197,7 @@ GameObject:
   - component: {fileID: 1934819135}
   - component: {fileID: 1934819134}
   - component: {fileID: 1934819138}
+  - component: {fileID: 1934819139}
   m_Layer: 0
   m_Name: DefaultBar
   m_TagString: Untagged
@@ -1333,7 +1347,7 @@ Transform:
   m_GameObject: {fileID: 1934819133}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -1.01, y: -1.8, z: 0}
+  m_LocalPosition: {x: 1.47, y: 0.73, z: 0}
   m_LocalScale: {x: 0.25, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1351,6 +1365,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d14728c8fdfe044f4886df7105b2fab7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DefaultBar
+--- !u!114 &1934819139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934819133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f439a83e57fa4e59a8c470afb97d6bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BarMover
   moveOffset: {x: 0, y: 2}
   duration: 1
 --- !u!1001 &4215308469432570765

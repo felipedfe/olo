@@ -8,6 +8,7 @@ Trocar as 4 `Walls` (presas ao tamanho da tela) por um limite da **fase inteira*
 - A câmera **segue a bola na vertical**, com suavidade.
 - A câmera **nunca mostra o que está fora da fase**.
 - Quando a bola reseta, a câmera **volta junto na hora**, sem ficar "deslizando" lá de cima.
+- **Todo mundo vê a mesma área** do jogo, em qualquer celular (letterbox, como o `Scale.FIT` do Phaser).
 
 ## Progresso
 
@@ -19,6 +20,7 @@ Trocar as 4 `Walls` (presas ao tamanho da tela) por um limite da **fase inteira*
 - [ ] [Passo 5 — Câmera seguindo a bola](#passo-5--câmera-seguindo-a-bola)
 - [ ] [Passo 6 — Câmera presa dentro da fase (Confiner 2D)](#passo-6--câmera-presa-dentro-da-fase-confiner-2d)
 - [ ] [Passo 7 — Câmera volta junto no reset](#passo-7--câmera-volta-junto-no-reset)
+- [ ] [Passo 8 — Mesma área em qualquer tela (letterbox)](#passo-8--mesma-área-em-qualquer-tela-letterbox)
 
 ## A ideia
 
@@ -55,6 +57,7 @@ A altura é **por fase**: cada cena tem o próprio `LevelBounds`, ajustado no ed
 | `cam.scrollY = Linear(cam.scrollY, target, 0.08)` | Cinemachine Camera seguindo a bola, com **Damping** |
 | `cameras.main.setBounds(0, 0, width, levelHeight)` | **Cinemachine Confiner 2D** usando o mesmo colisor |
 | `if (distância > viewportHeight) scrollY = target` (encaixe no reset) | `CinemachineCore.OnTargetObjectWarped(...)` |
+| `scale: { mode: Phaser.Scale.FIT }` (740×1360 com faixas) | `Camera.rect` calculado para manter 9:16 (`CameraLetterbox.cs`) |
 
 ---
 
@@ -226,6 +229,87 @@ public void ResetPosition()
 > **E a arquitetura?** A bola chamar o Cinemachine é aceitável aqui: ela é quem se teleporta, então é ela quem avisa. O `LevelBounds` continua só decidindo **quando** resetar.
 
 ✅ **Teste:** a bola sobe bastante, sai pelo lado e a câmera **volta na hora** para o começo da fase, sem deslizar.
+
+---
+
+## Passo 8 — Mesma área em qualquer tela (letterbox)
+
+Faça este teste **antes**: na aba **Game**, troque a resolução para um iPhone recente (ex.: **1179 × 2556**, proporção 9:19.5) e depois para um iPad (ex.: **1536 × 2048**, 3:4).
+
+- No iPhone, os **lados da fase são cortados**: barras perto da borda somem.
+- No iPad, aparece **espaço fora da fase** dos lados.
+
+Isso acontece porque a câmera fixa a **altura** (Size = 5) e a largura varia com a tela.
+
+A solução é a mesma do Phaser (`Scale.FIT`): a câmera desenha **sempre em 9:16**, e o que sobra da tela vira faixa.
+
+### 8a. Script `CameraLetterbox.cs` na `Main Camera`
+
+Criar `Assets/Scripts/CameraLetterbox.cs` e adicionar na **`Main Camera`** (não na `FollowCamera`):
+
+```csharp
+using UnityEngine;
+
+[RequireComponent(typeof(Camera))]
+public class CameraLetterbox : MonoBehaviour
+{
+    // proporção em que o jogo foi desenhado (retrato 9:16)
+    [SerializeField] private float targetWidth = 9f;
+    [SerializeField] private float targetHeight = 16f;
+
+    private Camera cam;
+
+    void Awake()
+    {
+        cam = GetComponent<Camera>();
+    }
+
+    void Update()
+    {
+        float targetAspect = targetWidth / targetHeight;
+        float screenAspect = (float)Screen.width / Screen.height;
+
+        if (screenAspect < targetAspect)
+        {
+            // tela mais alta que 9:16 (ex.: iPhone): faixas em cima e embaixo
+            float height = screenAspect / targetAspect;
+            cam.rect = new Rect(0, (1 - height) / 2, 1, height);
+        }
+        else
+        {
+            // tela mais larga que 9:16 (ex.: iPad): faixas nos lados
+            float width = targetAspect / screenAspect;
+            cam.rect = new Rect((1 - width) / 2, 0, width, 1);
+        }
+    }
+}
+```
+
+> **Como funciona:**
+> - **`cam.rect`** é a parte da tela onde a câmera desenha, em valores de 0 a 1. `(0, 0, 1, 1)` é a tela inteira. `(0, 0.1, 1, 0.8)` desenha só nos 80% do meio, deixando 10% em cima e 10% embaixo.
+> - O script compara a proporção da tela com 9:16 e calcula um retângulo centralizado que **sempre** tem 9:16. Dentro dele, a câmera continua mostrando 5.625 × 10, exatamente a largura do `LevelBounds`.
+> - **Por que na `Main Camera`?** O Cinemachine (`FollowCamera`) decide **para onde** a câmera olha. O `rect` decide **em que parte da tela** ela desenha. São coisas separadas: o Brain não mexe no `rect`.
+> - **Por que no `Update`?** Para funcionar quando você troca a resolução da Game view no editor. No celular a tela não muda, e o cálculo é barato.
+
+### 8b. Câmera de fundo para pintar as faixas
+
+A área fora do `rect` **não é desenhada por ninguém**, e em alguns celulares isso aparece como "sujeira" (restos de frames anteriores). Uma segunda câmera, que não desenha nada além de uma cor, resolve:
+
+1. **Hierarchy → Create → Camera**, renomear para `LetterboxBackground`.
+2. **Remover** o componente **Audio Listener** dela (só pode existir um na cena, e ele já está na `Main Camera`).
+3. **Rendering → Culling Mask**: `Nothing` (não desenha nenhum objeto).
+4. **Environment → Background Type**: `Solid Color`, com a cor das faixas (ex.: preto).
+5. **Priority** (ou **Depth**): **menor** que o da `Main Camera` (ex.: `-1`), para ela desenhar **antes**, por baixo.
+
+> **Por quê?** Ela pinta a tela inteira com a cor de fundo, e a `Main Camera` desenha o jogo por cima, só no retângulo 9:16. As faixas ficam com uma cor limpa.
+
+✅ **Teste** (trocando a resolução da Game view):
+- **1080 × 1920** (9:16): tela cheia, sem faixas;
+- **iPhone** (9:19.5): faixas em cima e embaixo, e a fase aparece **inteira** na largura;
+- **iPad** (3:4): faixas nos lados, sem mostrar nada fora da fase;
+- nos três casos, a **mesma área** da fase aparece.
+
+> **E as faixas ficam vazias para sempre?** Não precisa. A interface (pontuação, pause) vai num **Canvas**, que cobre a tela **inteira**, faixas incluídas. Num celular alto, a faixa de cima é um bom lugar para o HUD. Isso fica para um plano futuro.
 
 ---
 
