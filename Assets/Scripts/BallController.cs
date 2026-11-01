@@ -1,3 +1,4 @@
+using System.Collections; // necessário para usar coroutines (IEnumerator)
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,7 @@ public enum BallState
     Ready,
     Moving,
     Attached,
+    Warping,
     Finished
 }
 
@@ -18,13 +20,16 @@ public class BallController : MonoBehaviour
     private Vector3 initialPosition;
     private Transform attachedBar;   // a barra em que a bola está grudada
     private Vector2 attachOffset;    // distância da bola até o centro da barra
+    private SpriteRenderer spriteRenderer;  // para esconder e mostrar a bola
 
     public float speed = 5f;
+    public float warpDelay = 0.3f;   // quanto tempo a bola fica "dentro" do warp
 
     void Awake() // esse método roda antes do Start()
     {
         direction = initialDirection;
         rig = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         initialPosition = transform.position;
     }
 
@@ -58,6 +63,10 @@ public class BallController : MonoBehaviour
 
     public void ResetPosition()
     {
+        // se a bola estava dentro de um warp, cancela a espera e mostra a bola de novo
+        StopAllCoroutines();
+        spriteRenderer.enabled = true;
+
         currentState = BallState.Ready;
         attachedBar = null;
 
@@ -104,6 +113,39 @@ public class BallController : MonoBehaviour
             direction = Vector2.Reflect(direction, axisNormal);
         }
 
+        rig.linearVelocity = direction * speed;
+    }
+
+    // Manda a bola para outro ponto, mantendo a direção e a velocidade.
+    // Devolve true se a bola entrou no warp.
+    public bool WarpTo(Vector2 position)
+    {
+        // só entra no warp a bola que está andando (não a parada no início nem a grudada)
+        if (currentState != BallState.Moving) return false;
+
+        StartCoroutine(WarpRoutine(position));
+        return true;
+    }
+
+    private IEnumerator WarpRoutine(Vector2 position)
+    {
+        currentState = BallState.Warping;
+
+        // a bola para e some dentro do warp de entrada
+        rig.linearVelocity = Vector2.zero;
+        rig.bodyType = RigidbodyType2D.Kinematic; // nada empurra a bola enquanto ela está escondida
+        spriteRenderer.enabled = false;
+        rig.position = position;
+
+        // espera o delay (o jogo continua rodando normalmente enquanto isso)
+        yield return new WaitForSeconds(warpDelay);
+
+        // aparece no warp de saída
+        rig.bodyType = RigidbodyType2D.Dynamic;
+        spriteRenderer.enabled = true;
+
+        // volta a andar com a mesma direção: entrou ↗, sai ↗
+        currentState = BallState.Moving;
         rig.linearVelocity = direction * speed;
     }
 
