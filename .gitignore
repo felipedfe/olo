@@ -12,6 +12,13 @@
 .utmp/
 *_BurstDebugInformation_DoNotShip/
 
+# Unity - recuperação após crash
+/[Aa]ssets/_Recovery/
+/[Aa]ssets/_Recovery.meta
+
+# Saída de build do Burst (WebGL)
+/[Dd]ata/
+
 # Unity - arquivos temporários
 *.tmp
 *.bak
