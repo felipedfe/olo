@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public static class GameEvents
 {
     // a lista de quem quer ser avisado (começa vazia = null)
@@ -6,6 +8,7 @@ public static class GameEvents
     // a porta oficial para avisar todos da lista
     public static void AnnounceBallReset()
     {
+        Debug.Log(BallReset);
         if (BallReset != null)   // tem alguém na lista?
         {
             BallReset();          // avisa todos

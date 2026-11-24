@@ -76,10 +76,11 @@ public class BallController : MonoBehaviour
         rig.angularVelocity = 0f;
 
         rig.position = initialPosition;
-        // move o Transform na hora também: o rig.position só atualiza o Transform no próximo passo de física,
-        // e a câmera (que segue o Transform) faria o corte para o lugar antigo da bola
         transform.position = initialPosition;
         direction = initialDirection;
+
+        // evento que reseta a bola
+        GameEvents.AnnounceBallReset();
     }
 
     // Gruda a bola em "bar" (ela passa a acompanhar esse Transform).

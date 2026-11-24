@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5529696193162847430}
   - component: {fileID: 3059191412444304637}
   - component: {fileID: 996904664435077515}
-  - component: {fileID: 2817922265668235708}
   - component: {fileID: 4690608564811996002}
+  - component: {fileID: 3230330373801868135}
   m_Layer: 0
   m_Name: BreakBar
   m_TagString: Untagged
@@ -109,21 +109,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2817922265668235708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5526669447230922591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d14728c8fdfe044f4886df7105b2fab7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DefaultBar
-  visual: {fileID: 5077876040616675431}
-  punchDistance: 0.05
-  punchDuration: 0.15
 --- !u!114 &4690608564811996002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,8 +121,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f439a83e57fa4e59a8c470afb97d6bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BarMover
-  moveOffset: {x: 0, y: 0}
-  duration: 0
+  moveOffset: {x: 0, y: 1}
+  duration: 1
+--- !u!114 &3230330373801868135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5526669447230922591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdab628fcf1c74c45a648bb290defa5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BreakBar
+  visual: {fileID: 5077876040616675431}
+  breakDuration: 0.15
 --- !u!1 &8214878593672376407
 GameObject:
   m_ObjectHideFlags: 0
