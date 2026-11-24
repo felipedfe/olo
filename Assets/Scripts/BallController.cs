@@ -82,14 +82,16 @@ public class BallController : MonoBehaviour
         direction = initialDirection;
     }
 
-    public void AttachTo(Transform bar, Vector2 normal)
+    // Gruda a bola em "bar" (ela passa a acompanhar esse Transform).
+    // Devolve true se a bola grudou.
+    public bool AttachTo(Transform bar, Vector2 normal)
     {
-        if (currentState != BallState.Moving) return;
+        if (currentState != BallState.Moving) return false;
 
         Vector2 axisNormal = SnapToAxis(normal);
 
         // só gruda se estiver indo contra a barra (evita grudar de novo logo ao soltar)
-        if (Vector2.Dot(direction, axisNormal) >= 0) return;
+        if (Vector2.Dot(direction, axisNormal) >= 0) return false;
 
         currentState = BallState.Attached;
         attachedBar = bar;
@@ -101,11 +103,13 @@ public class BallController : MonoBehaviour
         // para a bola e deixa ela ser movida só pelo FixedUpdate enquanto estiver grudada
         rig.linearVelocity = Vector2.zero;
         rig.bodyType = RigidbodyType2D.Kinematic;
+        return true;
     }
 
-    public void Reflect(Vector2 normal)
+    // Rebate a bola na superfície. Devolve true se a bola estava andando e rebateu.
+    public bool Reflect(Vector2 normal)
     {
-        if (currentState != BallState.Moving) return;
+        if (currentState != BallState.Moving) return false;
 
         // Esse método faz com q a bola sempre rebate num angulo de 45
         Vector2 axisNormal = SnapToAxis(normal);
@@ -117,6 +121,7 @@ public class BallController : MonoBehaviour
         }
 
         rig.linearVelocity = direction * speed;
+        return true;
     }
 
     // Manda a bola para outro ponto, mantendo a direção e a velocidade.
