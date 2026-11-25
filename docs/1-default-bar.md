@@ -265,11 +265,14 @@ public class DefaultBar : MonoBehaviour
 
 Equivalente ao `DefaultBar2` do Phaser (`tileWidth` / `tileHeight`):
 
-1. No **SpriteRenderer**, colocar **Draw Mode = Sliced** (ou **Tiled**).
-2. Voltar a **Scale** para `1 × 1` e controlar o tamanho pelo campo **Size**.
-3. No **BoxCollider2D**, ligar **Auto Tiling** para o colisor acompanhar o tamanho.
+> **Atualizado:** o Auto Tiling do BoxCollider2D só funciona com o SpriteRenderer no **mesmo** GameObject. Depois que a barra ganhou o filho `Visual` (para o punch), isso deixou de valer. Agora quem faz esse trabalho é o componente **`BarSize`**.
 
-> Só faz diferença quando tiver uma arte de barra de verdade (com bordas). Com o quadrado branco, esticar pela escala funciona igual.
+1. No **SpriteRenderer** do `Visual`, **Draw Mode = Sliced** (ou **Tiled**).
+2. A **Scale** da barra fica sempre `1 × 1`.
+3. O tamanho é controlado pelo campo **Size** do componente **`BarSize`** (na raiz). No editor, ele atualiza o **Size** do sprite e o do **BoxCollider2D** juntos (pelo `OnValidate`).
+4. **Collider Padding** é a folga do collider em relação à imagem: positivo deixa o collider maior, negativo deixa menor.
+
+As três barras (DefaultBar, GrabBar e BreakBar) já vêm com o `BarSize` no prefab.
 
 ---
 

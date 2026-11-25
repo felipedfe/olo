@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 996904664435077515}
   - component: {fileID: 4690608564811996002}
   - component: {fileID: 3230330373801868135}
+  - component: {fileID: 7351820946213758402}
   m_Layer: 0
   m_Name: BreakBar
   m_TagString: Untagged
@@ -137,6 +138,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BreakBar
   visual: {fileID: 5077876040616675431}
   breakDuration: 0.15
+--- !u!114 &7351820946213758402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5526669447230922591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c020d05106a40debeb16631f1fdef4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BarSize
+  size: {x: 0.32, y: 2.22}
+  colliderPadding: {x: 0, y: 0.03}
+  visual: {fileID: 1509581397798914377}
 --- !u!1 &8214878593672376407
 GameObject:
   m_ObjectHideFlags: 0

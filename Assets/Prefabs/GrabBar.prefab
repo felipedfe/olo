@@ -85,8 +85,8 @@ SpriteRenderer:
   m_Color: {r: 1, g: 0.48627448, b: 0.86023736, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_DrawMode: 1
+  m_Size: {x: 0.25, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 2118857603544059365}
   - component: {fileID: 6974973833794807916}
   - component: {fileID: 1203215473874835407}
+  - component: {fileID: 7351820946213758403}
   m_Layer: 0
   m_Name: GrabBar
   m_TagString: Untagged
@@ -122,7 +123,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.28, y: -2.77, z: 0}
-  m_LocalScale: {x: 0.25, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8152787275705806793}
@@ -172,7 +173,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.9}
+  m_Size: {x: 0.25, y: 1.8}
   m_EdgeRadius: 0
 --- !u!50 &2118857603544059365
 Rigidbody2D:
@@ -230,3 +231,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BarMover
   moveOffset: {x: 0, y: 0}
   duration: 2
+--- !u!114 &7351820946213758403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6160337125865043260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c020d05106a40debeb16631f1fdef4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BarSize
+  size: {x: 0.25, y: 2}
+  colliderPadding: {x: 0, y: -0.2}
+  visual: {fileID: 8506875507273900379}

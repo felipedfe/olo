@@ -54,7 +54,7 @@ public class GrabBar : MonoBehaviour
         if (visual == null) return;
 
         // o DOPunchPosition mexe no localPosition do visual, então o deslocamento
-        // precisa estar no espaço local da barra (isso também compensa a escala 0.25 x 2)
+        // precisa estar no espaço local da barra (isso também compensa a escala dela, se tiver)
         Vector3 worldOffset = worldDirection.normalized * punchDistance;
         Vector3 localOffset = transform.InverseTransformVector(worldOffset);
 
