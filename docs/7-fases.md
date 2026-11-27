@@ -11,7 +11,7 @@ Hoje o Olo tem uma cena só (`Game.unity`). Este plano prepara o jogo para ter *
 
 ## Progresso
 
-- [ ] [Passo 0 — Pré-requisito: `GameEvents`](#passo-0--pré-requisito-gameevents)
+- [x] [Passo 0 — Pré-requisito: `GameEvents`](#passo-0--pré-requisito-gameevents)
 - [ ] [Passo 1 — Ação `Finish` na bola + evento `BallFinished`](#passo-1--ação-finish-na-bola--evento-ballfinished)
 - [ ] [Passo 2 — Script `FinishHole.cs`](#passo-2--script-finishholecs)
 - [ ] [Passo 3 — Lista de fases (ScriptableObject)](#passo-3--lista-de-fases-scriptableobject)
@@ -101,8 +101,21 @@ Este plano usa o `GameEvents.cs`, criado no [doc 6, passo 1](6-break-bar.md#pass
     }
 ```
 
+**3.** Ainda no `BallController.cs`, proteger o `ResetPosition()`: logo na primeira linha dele, antes do `StopAllCoroutines()`:
+
+```csharp
+    public void ResetPosition()
+    {
+        // a bola que já terminou a fase não volta para o início (a fase está trocando)
+        if (currentState == BallState.Finished) return;
+
+        // ... o resto continua igual
+```
+
 **Por quê?**
 - O estado `Finished` já existia no `enum`, só não era usado. Agora ele tem uma ação que leva até ele.
+- **`Finished` é uma trava.** No mesmo frame em que a bola toca o buraco, ela para e muda de estado. Parada dentro do buraco, ela não sai da tela, então o `CameraBounds` não dispara o reset. E, se algum dia alguma coisa chamar o reset mesmo assim, o guarda do passo 3 ignora. Assim, "entrou no buraco" e "saiu da tela" nunca acontecem juntos.
+- Um segundo toque no buraco (dois triggers seguidos) também é ignorado: o `Finish()` só aceita a bola em `Moving`.
 - No estado `Finished`, o `OnMove` não faz nada (ele só lança nos estados `Ready` e `Attached`), então o jogador não consegue relançar a bola enquanto a fase troca.
 - **A bola anuncia, em vez de chamar o GameManager.** Assim a bola continua sem saber que existem fases, e no futuro outros sistemas (som de vitória, estrelas) podem escutar o mesmo evento.
 
@@ -285,10 +298,10 @@ Hoje o `CanvasFade` está solto na cena. Se ele continuasse assim, seria destru�
 
 1. **Hierarchy → Create Empty**, renomear para `GameManager`. Ele precisa ficar na **raiz** da Hierarchy (não pode ser filho de nada), porque o `DontDestroyOnLoad` só funciona em objetos da raiz.
 2. **Add Component → GameManager** (o script).
-3. Arrastar o objeto `CanvasFade` da Hierarchy **para dentro** do `GameManager`, para virar filho dele.
+3. Arrastar o objeto `CanvasFade` da Hierarchy **para dentro** do `GameManager`, para virar filho dele. Ele não precisa ser um prefab próprio: no item 5, os filhos entram junto no prefab do GameManager.
 4. No componente GameManager:
    - **Level List** ← o asset `LevelList` da pasta Data;
-   - **Fade** ← o filho `CanvasFade`.
+   - **Fade** ← o objeto `Image` (filho do `CanvasFade`). É nele que está o componente `CanvasFade`; arrastar o pai não funciona, porque um campo de componente só aceita o objeto que tem aquele componente.
 5. Arrastar o `GameManager` para **Assets/Prefabs**, para virar prefab.
 
 **Por quê o Canvas pode ser filho de um objeto vazio?**

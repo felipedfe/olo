@@ -63,6 +63,8 @@ public class BallController : MonoBehaviour
 
     public void ResetPosition()
     {
+        if (currentState == BallState.Finished) return;
+
         // se a bola estava dentro de um warp, cancela a espera e mostra a bola de novo
         StopAllCoroutines();
         spriteRenderer.enabled = true;
@@ -170,6 +172,21 @@ public class BallController : MonoBehaviour
         {
             return new Vector2(0, Mathf.Sign(normal.y)); // bateu na ponta
         }
+    }
+
+    public bool Finish()
+    {
+        // só rola o finish se a bola estiver andando
+        if (currentState != BallState.Moving) return false;
+
+        currentState = BallState.Finished;
+
+        // para a bola e desliga a física
+        rig.linearVelocity = Vector2.zero;
+        rig.bodyType = RigidbodyType2D.Kinematic;
+
+        GameEvents.AnnounceBallFinished();
+        return true;
     }
 
 }

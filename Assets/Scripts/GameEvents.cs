@@ -4,6 +4,7 @@ public static class GameEvents
 {
     // a lista de quem quer ser avisado (começa vazia = null)
     public static event System.Action BallReset;
+    public static event System.Action BallFinished;
 
     // a porta oficial para avisar todos da lista
     public static void AnnounceBallReset()
@@ -11,6 +12,14 @@ public static class GameEvents
         if (BallReset != null)   // tem alguém na lista?
         {
             BallReset();          // avisa todos
+        }
+    }
+
+    public static void AnnounceBallFinished()
+    {
+        if (BallFinished != null)
+        {
+            BallFinished();
         }
     }
 }
