@@ -12,12 +12,12 @@ Hoje o Olo tem uma cena só (`Game.unity`). Este plano prepara o jogo para ter *
 ## Progresso
 
 - [x] [Passo 0 — Pré-requisito: `GameEvents`](#passo-0--pré-requisito-gameevents)
-- [ ] [Passo 1 — Ação `Finish` na bola + evento `BallFinished`](#passo-1--ação-finish-na-bola--evento-ballfinished)
-- [ ] [Passo 2 — Script `FinishHole.cs`](#passo-2--script-finishholecs)
-- [ ] [Passo 3 — Lista de fases (ScriptableObject)](#passo-3--lista-de-fases-scriptableobject)
-- [ ] [Passo 4 — Script `GameManager.cs`](#passo-4--script-gamemanagercs)
-- [ ] [Passo 5 — Prefab do GameManager (com o fade dentro)](#passo-5--prefab-do-gamemanager-com-o-fade-dentro)
-- [ ] [Passo 6 — `CameraBounds` usa o fade do GameManager](#passo-6--camerabounds-usa-o-fade-do-gamemanager)
+- [x] [Passo 1 — Ação `Finish` na bola + evento `BallFinished`](#passo-1--ação-finish-na-bola--evento-ballfinished)
+- [x] [Passo 2 — Script `FinishHole.cs`](#passo-2--script-finishholecs)
+- [x] [Passo 3 — Lista de fases (ScriptableObject)](#passo-3--lista-de-fases-scriptableobject)
+- [x] [Passo 4 — Script `GameManager.cs`](#passo-4--script-gamemanagercs)
+- [x] [Passo 5 — Prefab do GameManager (com o fade dentro)](#passo-5--prefab-do-gamemanager-com-o-fade-dentro)
+- [x] [Passo 6 — `CameraBounds` usa o fade do GameManager](#passo-6--camerabounds-usa-o-fade-do-gamemanager)
 - [ ] [Passo 7 — Criar as cenas das fases](#passo-7--criar-as-cenas-das-fases)
 - [ ] [Passo 8 — Testar](#passo-8--testar)
 

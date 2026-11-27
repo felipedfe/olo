@@ -5,13 +5,12 @@ using UnityEngine;
 public class CameraBounds : MonoBehaviour
 {
     public CinemachineCamera cinemachine;
-    public CanvasFade canvasFade;
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         // ao parar o Play o Unity destrói os objetos e dispara este evento: nesse caso, ignora
         if (!gameObject.activeInHierarchy) return;
-        if (canvasFade == null) return;
+        if (GameManager.Instance == null) return;
 
         if (collision.CompareTag("Ball"))
         {
@@ -24,6 +23,9 @@ public class CameraBounds : MonoBehaviour
 
     private IEnumerator ResetSequence(BallController ball)
     {
+        // o fade mora no GameManager
+        CanvasFade canvasFade = GameManager.Instance.fade;
+
         // 1. escurece a tela e espera terminar
         yield return canvasFade.FadeOut();
 
